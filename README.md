@@ -27,11 +27,18 @@ crawl pdf [--flags]
 - `--file`: Path to the PDF file to be processed.
 - `--chunk-strategy`: The strategy used for chunking the content.
 - `--chunk-size`: Size of each chunk in the chunk strategy unit.
+- `--chunk-overlap`: Overlap size between chunks in characters.
 - `--output-folder`: Output folder where the `.jsonl` files will be generated.
 
 #### Chunking strategies
 
-- **Greedy Word** (Word-based fixed-length): Splits the text into words and then greedily groups words together into chunks, ensuring that each chunk does not exceed a specified maximum character length.
+Available text splitting strategies are done using [`langchain`](https://python.langchain.com/docs/concepts/text_splitters/) implementations.
+
+- [`by_char`](https://python.langchain.com/docs/how_to/character_text_splitter/): This is the simplest method. This splits based on a given character sequence, which defaults to "\n\n". Chunk length is measured by number of characters.
+- [`by_token_tiktoken`](https://python.langchain.com/docs/how_to/split_by_token/#tiktoken): Uses tiktoken to estimate tokens used. It will probably be more accurate for the OpenAI models.
+- [`by_token_spacy`](https://python.langchain.com/docs/how_to/split_by_token/#spacy): LangChain implements splitters based on the spaCy tokenizer.
+- [`by_token_nltk`](https://python.langchain.com/docs/how_to/split_by_token/#nltk): Rather than just splitting on "\n\n", we can use NLTK to split based on NLTK tokenizers.
+- [`by_token_huggingface`](https://python.langchain.com/docs/how_to/split_by_token/#hugging-face-tokenizer): ???
 
 </br>
 
