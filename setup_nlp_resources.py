@@ -6,9 +6,6 @@ import subprocess
 import sys
 
 # Download NLTK 'punkt' data if not present
-##
-# Not working, so will install resources in users home directory
-#
 venv_dir = os.path.join(os.getcwd(), '.venv/lib')
 nltk_data_dir = os.path.join(venv_dir, 'nltk_data')
 os.makedirs(nltk_data_dir, exist_ok=True)
@@ -18,7 +15,7 @@ try:
     print("NLTK data already present.")
 except LookupError:
     print("Downloading NLTK data...")
-    nltk.download('all', download_dir=nltk_data_dir)
+    nltk.download('punkt_tab', download_dir=nltk_data_dir)
 
 # Download spaCy model if not present
 spacy_model = "en_core_web_sm"
