@@ -18,19 +18,43 @@ crawl <command> [--flags]
 
 ## (`pdf`) command
 
+#### Regular CLI
+
 ```bash
 crawl pdf [--flags]
+```
+
+#### Script `run_pdf_strategies.sh`
+
+Run the script to execute all the chunking strategies.
+
+- Optionally provide `CHUNK_SIZE`, `CHUNK_OVERLAP` and `OUTPUT_DIR`. If not informed, the python's flag default will be used.
+- `ENV_DEV` argument is for running in development which will execute the script like `python -m src.cli.root ...`.
+
+```bash
+./run_pdf_strategies
+  FILE_OR_FOLDER=/path/to/file_or_folder
+  [CHUNK_SIZE=...]
+  [CHUNK_OVERLAP=...]
+  [OUTPUT_DIR=...]
+  [ENV_DEV=TRUE|FALSE]
+```
+
+e.g.:
+
+```bash
+./run_pdf_strategies.sh FILE_OR_FOLDER=in/ CHUNK_SIZE=200 CHUNK_OVERLAP=20 ENV_DEV=TRUE
 ```
 
 ### Flags
 
 - `--file`: Path to the PDF file to be processed.
 - `--chunk-strategy`: The strategy used for chunking the content.
-- `--chunk-size`: Size of each chunk in the chunk strategy unit.
-- `--chunk-overlap`: Overlap size between chunks in characters.
+- `--chunk-size`: Size of each chunk in the chunk strategy unit. (Default: `200`)
+- `--chunk-overlap`: Overlap size between chunks in characters. (Default: `64`)
 - `--chunk-separator`: Separator(s) to use for chunking. Can be specified multiple times for multiple separators.
-- `--output-folder`: Output folder where the `.jsonl` files will be generated.
-- `--verbose`: Enable verbose output.
+- `--output-folder`: Output folder where the `.jsonl` files will be generated. (Default: `/out`)
+- `--verbose`: Enable verbose output. (Default: `false`)
 
 </br>
 
@@ -43,7 +67,7 @@ Available text splitting strategies are done using [`langchain`](https://python.
   - Chunk length is measured by `length_function` which by default uses the number of characters.
   - It has the downside of splitting in the middle of words or sentences.
   - And if the separator is not existent in the content it will do no splits, and the chunk will stay as the entire content.
-- [`by_separators`](): A smarter and recursive method.
+- [`by_separators`](https://python.langchain.com/docs/concepts/text_splitters/#text-structured-based): A smarter and recursive method.
   - It splits based on multiple `separators`, which defaults to `["\n\n", "\n", " ", ""]`.
   - Chunk length is also measured by `length_function` which by default uses the number of characters.
 - [`by_token_tiktoken`](https://python.langchain.com/docs/how_to/split_by_token/#tiktoken): Uses tiktoken to estimate tokens used. It will probably be more accurate for the OpenAI models.
@@ -59,6 +83,24 @@ Available text splitting strategies are done using [`langchain`](https://python.
 </br>
 
 # Development
+
+### Setup environments and resources
+
+#### Setup virtual environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+#### Download resources
+
+```bash
+python setup_nlp_resources.py
+```
+
+</br>
 
 ### Execute in development
 
