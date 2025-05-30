@@ -9,26 +9,37 @@ CHUNK_OVERLAP=""
 OUTPUT_DIR=""
 ENV_DEV="FALSE"
 
-# Parse named arguments
-for ARG in "$@"; do
-  case $ARG in
-    FILE_OR_FOLDER=*)
-      FPATH="${ARG#*=}"
+# Parse flags
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    --file-or-folder)
+      FPATH="$2"
+      shift
+      shift
       ;;
-    CHUNK_SIZE=*)
-      CHUNK_SIZE="${ARG#*=}"
+    --chunk-size)
+      CHUNK_SIZE="$2"
+      shift
+      shift
       ;;
-    CHUNK_OVERLAP=*)
-      CHUNK_OVERLAP="${ARG#*=}"
+    --chunk-overlap)
+      CHUNK_OVERLAP="$2"
+      shift
+      shift
       ;;
-    OUTPUT_DIR=*)
-      OUTPUT_DIR="${ARG#*=}"
+    --output-dir)
+      OUTPUT_DIR="$2"
+      shift
+      shift
       ;;
-    ENV_DEV=*)
-      ENV_DEV="${ARG#*=}"
+    --env-dev)
+      ENV_DEV="$2"
+      shift
+      shift
       ;;
     *)
-      echo -e "${YELLOW}[run.sh] Unknown argument: $ARG${NC}"
+      echo "Unknown argument: $1"
       exit 1
       ;;
   esac
@@ -36,7 +47,7 @@ done
 
 # Required arguments
 if [ -z "$FPATH" ]; then
-  echo -e "${YELLOW}[run.sh] Usage: $0 FILE_OR_FOLDER=... [CHUNK_SIZE=...] [CHUNK_OVERLAP=...] [OUTPUT_DIR=...] [ENV_DEV=TRUE|FALSE]${NC}"
+  echo -e "${YELLOW}[run.sh] Usage: $0 --file-or-folder <path> [--chunk-size <size>] [--chunk-overlap <overlap>] [--output-dir <dir>] [--env-dev <TRUE|FALSE>]${NC}"
   exit 1
 fi
 
@@ -60,7 +71,7 @@ fi
 if [ "$ENV_DEV" = "TRUE" ]; then
   PYTHON_CMD="python -m src.cli.root"
 # else
-  # PYTHON_CMD="python ???"
+#   PYTHON_CMD="./crawl"
 fi
 
 if [ -z "$PYTHON_CMD" ]; then
