@@ -7,11 +7,7 @@ crawl-this is a simple tool to facilitate:
 1. `[pdf]` Extraction and chunking of content from PDF files to a `.jsonl`.
 2. `[html]` Crawling and chunking of content from html pages to `.jsonl` files.
 
-Run it like:
-
-```bash
-crawl <command> [--flags]
-```
+How to [run](#development) it.
 
 </br>
 </br>
