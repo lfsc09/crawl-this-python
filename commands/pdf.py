@@ -1,3 +1,4 @@
+# type: ignore
 import pymupdf
 import os
 import json
@@ -49,7 +50,7 @@ def start(
 
     log(
         verbose=verbose,
-        message=f"Discovered {len(files_to_crawl)} PDF files to process.",
+        message=f"🔍 Discovered {len(files_to_crawl)} PDF files to process.",
     )
 
     for file_path in files_to_crawl:
@@ -60,6 +61,7 @@ def start(
             chunk_overlap=chunk_overlap,
             chunk_separators=chunk_separators,
             output_folder=output_folder,
+            verbose=verbose,
         )
 
     log(
@@ -75,11 +77,17 @@ def crawl_file(
     chunk_overlap: int | None,
     chunk_separators: List[str],
     output_folder: str,
+    verbose: bool,
 ) -> None:
     """
     Crawl PDF a file, chunk it and export its data to JSONL format.
     """
     doc = pymupdf.open(file_path)
+
+    log(
+        verbose=verbose,
+        message=f"📊 Processing file '{file_path}' that [{doc.page_count}] pages.",
+    )
 
     for chunk_strategy in chunk_strategies:
         output_filename = os.path.basename(file_path).replace(".pdf", "")
@@ -100,7 +108,7 @@ def crawl_file(
                 # Determine chunking strategy.
                 # More info in text splitters: https://python.langchain.com/docs/concepts/text_splitters/
                 ##
-                if "by_separator" in chunk_strategy:
+                if chunk_strategy == "by_separator":
                     separator = chunk_separators[0] if chunk_separators else ""
                     chunks = by_separator(
                         text=content,

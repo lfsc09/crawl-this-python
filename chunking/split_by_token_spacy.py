@@ -27,7 +27,7 @@ def split(
 
     if chunk_size is None:
         chunk_size = 1000
-    if not chunk_separator:
+    if chunk_separator is None:
         chunk_separator = "\n\n"
 
     return SpacyTextSplitter(
