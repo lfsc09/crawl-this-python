@@ -61,6 +61,7 @@ python main.py <command> [--flags]
 |   ├── pdf.py                            # CLI command to crawl pdf files
 |   └── html.py                           # CLI command to crawl web-sites
 ├── utils/
+|   ├── decode.py                         # Decode operations utilities
 |   ├── file.py                           # File operations utilities
 |   └── log.py                            # Log operations utilities
 ├── out/                                  # (Default) output folder for results

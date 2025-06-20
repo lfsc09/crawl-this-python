@@ -1,5 +1,6 @@
 import argparse
 
+from utils.decode import decode_escape
 from commands.pdf import start as pdf_start
 
 CHUNK_STRATEGIES = [
@@ -51,7 +52,7 @@ def main() -> None:
     )
     pdf_parser.add_argument(
         "--chunk-separator",
-        type=str,
+        type=decode_escape,
         default=[],
         nargs="*",
         help="Separator(s) to use for chunking. Can be specified multiple times for multiple separators.",
@@ -77,6 +78,9 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.command == "pdf":
+        if "all" in args.chunk_strategy:
+            args.chunk_strategy = CHUNK_STRATEGIES
+
         # Validate pdf flags
         if (
             args.chunk_size is not None
@@ -84,27 +88,16 @@ def main() -> None:
             and args.chunk_size < args.chunk_overlap
         ):
             parser.error("Chunk size must be greater than or equal to chunk overlap.")
-        if len(args.chunk_strategy) > 1 and "all" in args.chunk_strategy:
-            parser.error(
-                "Cannot use 'all' with other chunk strategies. Use 'all' alone or specify individual strategies."
-            )
-        if (len(args.chunk_strategy) > 1 or "all" in args.chunk_strategy) and len(
-            args.chunk_separator
-        ) > 0:
-            parser.error(
-                "Cannot specify chunk separators with multiple chunk strategies."
-            )
         if (
             "by_separator" in args.chunk_strategy
             or "by_token_spacy" in args.chunk_strategy
             or "by_token_nltk" in args.chunk_strategy
         ) and len(args.chunk_separator) > 1:
             parser.error(
-                "Only one separator can be used with ('by_separator', 'by_token_nltk' and 'by_token_spacy') strategies. Use 'by_separators' for multiple separators."
+                "Only one separator can be used with ('by_separator', 'by_token_nltk' and 'by_token_spacy') strategies. Use 'by_separators' alone for multiple separators."
             )
 
-        if "all" in args.chunk_strategy:
-            args.chunk_strategy = CHUNK_STRATEGIES
+        print(f"Using chunk separators: {args.chunk_separator}")
 
         # Dispatch
         args.func(

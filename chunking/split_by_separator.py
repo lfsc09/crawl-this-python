@@ -37,7 +37,7 @@ def split_single_separator(
         chunk_size = 200
     if chunk_overlap is None:
         chunk_overlap = 64
-    if not chunk_separator:
+    if chunk_separator is None:
         chunk_separator = "\n\n"
 
     return CharacterTextSplitter(
@@ -79,7 +79,7 @@ def split_multi_separator(
         chunk_size = 200
     if chunk_overlap is None:
         chunk_overlap = 64
-    if not chunk_separators:
+    if chunk_separators is None:
         chunk_separators = ("\n\n", "\n", " ", "")
 
     return RecursiveCharacterTextSplitter(
