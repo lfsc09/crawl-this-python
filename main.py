@@ -97,8 +97,6 @@ def main() -> None:
                 "Only one separator can be used with ('by_separator', 'by_token_nltk' and 'by_token_spacy') strategies. Use 'by_separators' alone for multiple separators."
             )
 
-        print(f"Using chunk separators: {args.chunk_separator}")
-
         # Dispatch
         args.func(
             file_paths=args.file,
