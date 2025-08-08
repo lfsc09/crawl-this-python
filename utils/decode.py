@@ -1,6 +1,7 @@
 import argparse
 import codecs
 
+
 def decode_escape(value: str) -> str:
     """
     Decode escape sequences in a string.
@@ -12,8 +13,6 @@ def decode_escape(value: str) -> str:
         str: The decoded string.
     """
     try:
-        return codecs.decode(value, 'unicode_escape')
+        return codecs.decode(value, "unicode_escape")
     except Exception:
-        raise argparse.ArgumentTypeError(
-            f"Invalid escape sequence in value: {value}"
-        )
+        raise argparse.ArgumentTypeError(f"Invalid escape sequence in value: {value}")

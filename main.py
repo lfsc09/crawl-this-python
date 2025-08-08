@@ -15,7 +15,7 @@ CHUNK_STRATEGIES = [
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Crawl data from websites or pdf files, chunk them using different strategies, and store them in .jsonl files.",
+        description="Crawl data from websites, markdown files or pdf files, chunk them using different strategies, and store them in .jsonl files.",
     )
 
     subparsers = parser.add_subparsers(
@@ -23,7 +23,9 @@ def main() -> None:
     )
 
     # Subparser for the 'pdf' command
-    pdf_parser = subparsers.add_parser("pdf", help="Crawl data from PDF files")
+    pdf_parser = subparsers.add_parser(
+        "pdf", help="Crawl and chunk data from PDF files"
+    )
     pdf_parser.add_argument(
         "--file",
         action="append",
@@ -60,7 +62,7 @@ def main() -> None:
     pdf_parser.add_argument(
         "--output-folder",
         type=str,
-        default="out",
+        default="jsonl-out",
         help="Folder to save the output JSONL files.",
     )
     pdf_parser.add_argument(
@@ -73,6 +75,39 @@ def main() -> None:
         "--verbose", action="store_true", default=False, help="Enable verbose output."
     )
     pdf_parser.set_defaults(func=pdf_start)
+
+    # Subparser for the 'web' command
+    web_parser = subparsers.add_parser(
+        "web", help="Crawl data from web urls, extracting to markdown files"
+    )
+    web_parser.add_argument(
+        "--url",
+        action="append",
+        type=str,
+        required=True,
+        help="Starting url(s) to crawl from.",
+    )
+    web_parser.add_argument(
+        "--depth",
+        type=int,
+        default=2,
+        help="Depth of crawling. If not specified, it will go only 2 levels deep.",
+    )
+    web_parser.add_argument(
+        "--output-folder",
+        type=str,
+        default="md-out",
+        help="Folder to save the output Markdown files.",
+    )
+    web_parser.add_argument(
+        "--clean-previous",
+        action="store_true",
+        default=False,
+        help="Clean the output folder before running the command.",
+    )
+    web_parser.add_argument(
+        "--verbose", action="store_true", default=False, help="Enable verbose output."
+    )
 
     # Parse
     args = parser.parse_args()
@@ -104,6 +139,14 @@ def main() -> None:
             chunk_size=args.chunk_size,
             chunk_overlap=args.chunk_overlap,
             chunk_separators=args.chunk_separator,
+            output_folder=args.output_folder,
+            clean_previous_runs=args.clean_previous,
+            verbose=args.verbose,
+        )
+    elif args.command == "web":
+        # Dispatch
+        args.func(
+            urls=args.url,
             output_folder=args.output_folder,
             clean_previous_runs=args.clean_previous,
             verbose=args.verbose,
